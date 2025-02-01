@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.28.0
 
-package queries
+package generated
 
 import (
 	"github.com/jackc/pgx/v5/pgtype"
@@ -12,7 +12,7 @@ type Contract struct {
 	ID          string
 	Title       string
 	Active      bool
-	Responsible string
+	Responsible pgtype.Text
 }
 
 type Event struct {

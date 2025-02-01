@@ -3,10 +3,12 @@
 //   sqlc v1.28.0
 // source: query.sql
 
-package queries
+package generated
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const activateContract = `-- name: ActivateContract :one
@@ -43,7 +45,7 @@ WHERE
 
 type AssignResponsibleParams struct {
 	ID          string
-	Responsible string
+	Responsible pgtype.Text
 }
 
 func (q *Queries) AssignResponsible(ctx context.Context, arg AssignResponsibleParams) error {

@@ -1,5 +1,5 @@
 -- name: CreateContract :one
-INSERT INTO contracts(title, start_date)
+INSERT INTO contracts(id, title)
     VALUES ($1, $2)
 RETURNING
     *;
@@ -14,16 +14,6 @@ WHERE
 RETURNING
     *;
 
--- name: DeactivateContract :one
-UPDATE
-    contracts
-SET
-    active = FALSE
-WHERE
-    id = $1
-RETURNING
-    *;
-
 -- name: GetContract :one
 SELECT
     *
@@ -32,45 +22,39 @@ FROM
 WHERE
     id = $1;
 
--- name: DeleteContract :one
-DELETE FROM contracts
-WHERE id = $1
-RETURNING
-    *;
-
--- name: GetContractsForResponsible :many
-SELECT
-    *
-FROM
+-- name: AssignResponsible :exec
+UPDATE
     contracts
+SET
+    responsible = $2
 WHERE
-    responsible = $1;
+    id = $1;
 
--- name: CreateContractEvent :one
-INSERT INTO contract_events(contract_id, "type", data)
-    VALUES ($1, $2, $3)
-RETURNING
-    *;
-
-
--- name: NotifyEvent :one
-select pg_notify('events', $1);
-
--- name: GetUnsentEvents :many
-SELECT
-    *
-FROM
-    contract_events
-WHERE
-    processed = FALSE
-    FOR UPDATE SKIP LOCKED;
+-- name: InsertEvent :exec
+INSERT INTO events(id, contract_id, "type", data)
+    VALUES ($1, $2, $3, $4);
 
 -- name: MarkEventAsProcessed :one
 UPDATE
-    contract_events
+    events
 SET
     processed = TRUE
 WHERE
     id = $1
 RETURNING
     *;
+
+-- name: NotifyEvent :exec
+SELECT
+    pg_notify('events', $1);
+
+-- name: GetUnsentEvents :many
+SELECT
+    *
+FROM
+    events
+WHERE
+    processed = FALSE
+FOR UPDATE
+    SKIP LOCKED;
+
