@@ -32,7 +32,7 @@ WHERE
 
 -- name: InsertEvent :exec
 INSERT INTO events(id, contract_id, "type", data)
-    VALUES ($1, $2, $3, $4);
+    VALUES ($1, $2, $3, $4)e
 
 -- name: MarkEventAsProcessed :one
 UPDATE

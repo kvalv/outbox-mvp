@@ -28,9 +28,9 @@ $$
 LANGUAGE plpgsql;
 
 -- +goose StatementEnd
-CREATE OR REPLACE TRIGGER "foo"
+CREATE OR REPLACE TRIGGER "after_insert_notify"
     AFTER INSERT ON events
-    FOR EACH ROW
+    FOR EACH STATEMENT
     EXECUTE PROCEDURE notify_listener();
 
 -- +goose Down
